@@ -6,7 +6,7 @@ const restController = {
     Restaurant.findAll()
       .then(restaurants => {
         console.log(restaurants)
-        return res.render('admin/restaurants', { restaurants })
+        return res.render('restaurants', { restaurants })
       })
     // return res.render('restaurants')
   },

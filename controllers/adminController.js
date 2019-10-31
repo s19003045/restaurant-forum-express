@@ -13,7 +13,12 @@ const adminController = {
 
   },
   getRestaurant: (req, res) => {
-    // Restaurant.findOne({where:{id:}})
+    console.log(req.params.id)
+    Restaurant.findOne({ where: { id: req.params.id } })
+      .then(restaurant => {
+        console.log(restaurant)
+        return res.render('admin/restaurant', { restaurant })
+      })
   },
   createRestaurant: (req, res) => {
     return res.render('admin/create')
