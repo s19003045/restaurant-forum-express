@@ -72,8 +72,13 @@ const adminController = {
           })
 
       })
+  },
+  deleteRestaurant: (req, res) => {
+    Restaurant.destroy({ where: { id: req.params.id } })
+      .then(() => {
+        res.redirect('/admin/restaurants')
+      })
   }
 }
-
 
 module.exports = adminController

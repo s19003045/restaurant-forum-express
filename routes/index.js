@@ -32,8 +32,8 @@ module.exports = (app, passport) => {
 
   app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
   app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
-
   app.put('/admin/restaurants/:id', adminController.putRestaurant)
+  app.delete('/admin/restaurants/:id', adminController.deleteRestaurant)
 
   // user route
   app.get('/signup', userController.signUpPage)
