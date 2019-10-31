@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt-nodejs')
 const db = require('../models')
 const User = db.User
-const passport = require('../config/passport')
 
 
 const userController = {

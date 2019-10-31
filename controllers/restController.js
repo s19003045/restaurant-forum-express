@@ -1,6 +1,17 @@
+const db = require('../models')
+const Restaurant = db.Restaurant
+
 const restController = {
   getRestaurants: (req, res) => {
-    return res.render('restaurants')
+    Restaurant.findAll()
+      .then(restaurants => {
+        console.log(restaurants)
+        return res.render('admin/restaurants', { restaurants })
+      })
+    // return res.render('restaurants')
+  },
+  getRestaurant: (req, res) => {
+    // Restaurant.findOne({where:{id:}})
   }
 }
 
