@@ -4,8 +4,7 @@ const app = express()
 // 判別開發環境
 if (process.env.NODE_ENV !== 'production') {      // 如果不是 production 模式，使用 dotenv 讀取 .env 檔案
   require('dotenv').config()
-  console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
-  console.log('process.env.IMGUR_CLIENT_ID:', process.env.IMGUR_CLIENT_ID)
+
 }
 
 const exphbs = require('express-handlebars')
@@ -46,7 +45,6 @@ app.use((req, res, next) => {
 app.listen(port, () => {
   // db.sequelize.sync()
   console.log(`Express server listen on port:${port}`)
-
 })
 
 require('./routes')(app, passport)
