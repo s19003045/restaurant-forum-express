@@ -1,5 +1,13 @@
 const express = require('express')
 const app = express()
+
+// 判別開發環境
+if (process.env.NODE_ENV !== 'production') {      // 如果不是 production 模式，使用 dotenv 讀取 .env 檔案
+  require('dotenv').config()
+  console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
+  console.log('process.env.IMGUR_CLIENT_ID:', process.env.IMGUR_CLIENT_ID)
+}
+
 const exphbs = require('express-handlebars')
 const port = process.env.PORT || 3000
 const db = require('./models')
@@ -8,6 +16,9 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const passport = require('./config/passport')
 const methodOverride = require('method-override')
+
+
+// console.log(process.env)
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
@@ -22,7 +33,6 @@ app.use(passport.session())
 app.use(methodOverride('_method'))
 
 app.use('/upload', express.static(__dirname + '/upload'))
-console.log('__driname:', __dirname)
 
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
@@ -36,6 +46,7 @@ app.use((req, res, next) => {
 app.listen(port, () => {
   // db.sequelize.sync()
   console.log(`Express server listen on port:${port}`)
+
 })
 
 require('./routes')(app, passport)
