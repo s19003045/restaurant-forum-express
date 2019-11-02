@@ -17,8 +17,6 @@ const passport = require('./config/passport')
 const methodOverride = require('method-override')
 
 
-// console.log(process.env)
-
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 

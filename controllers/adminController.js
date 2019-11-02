@@ -125,7 +125,32 @@ const adminController = {
       .then(() => {
         res.redirect('/admin/restaurants')
       })
-  }
+  },
+  editUsers: (req, res) => {
+    User.findAll()
+      .then(users => {
+        res.render('admin/users', { users })
+      })
+  },
+  putUsers: (req, res) => {
+
+    User.findByPk(req.params.id)
+      .then(user => {
+        if (user.isAdmin) {
+          user.update({
+            isAdmin: false
+          }).then(() => {
+            return res.redirect('/admin/users')
+          })
+        } else {
+          user.update({
+            isAdmin: true
+          }).then(() => {
+            return res.redirect('/admin/users')
+          })
+        }
+      })
+  },
 }
 
 module.exports = adminController

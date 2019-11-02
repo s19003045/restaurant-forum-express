@@ -42,11 +42,17 @@ module.exports = (app, passport) => {
 
   app.delete('/admin/restaurants/:id', adminController.deleteRestaurant)
 
+  // admin/users
+  app.get('/admin/users', authenticatedAdmin, adminController.editUsers)
+
+  app.put('/admin/users/:id', authenticatedAdmin, adminController.putUsers)
+
   // user route
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
   app.get('/signin', userController.signInPage)
   app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
   app.get('/logout', userController.logout)
+
 
 }
