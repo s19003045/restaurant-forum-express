@@ -44,8 +44,14 @@ module.exports = (app, passport) => {
 
   // admin/users
   app.get('/admin/users', authenticatedAdmin, adminController.editUsers)
-
   app.put('/admin/users/:id', authenticatedAdmin, adminController.putUsers)
+
+  // category routes
+  app.get('/admin/categories', authenticatedAdmin, adminController.getCategories)
+  app.post('/admin/categories', authenticatedAdmin, adminController.postCategories),
+  app.get('/admin/categories/:id/edit', authenticatedAdmin, adminController.editCategory),
+  app.put('/admin/categories/:id', authenticatedAdmin, adminController.putCategory)
+  app.delete('/admin/categories/:id', authenticatedAdmin, adminController.deleteCategory)
 
   // user route
   app.get('/signup', userController.signUpPage)

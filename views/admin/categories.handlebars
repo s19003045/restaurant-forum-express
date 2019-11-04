@@ -1,0 +1,62 @@
+<h1>餐廳後台</h1>
+
+<div class="mb-3">
+  <a href='/admin/restaurants' class="btn btn-link">restaurants
+  </a>
+  <a href='/admin/users' class="btn btn-link">Users
+  </a>
+  <a href='/admin/users' class="btn btn-link disabled">categories
+  </a>
+</div>
+<div class="col-8">
+
+  {{#if category}}
+  <div class="form-group mb-3">
+    <label for="category">Edit category name</label>
+    <form action="/admin/categories/{{category.id}}?_method=PUT" method="POST">
+      <input type="text" class="form-control mb-3" name="category" id="category" placeholder="Enter category"
+        value="{{category.name}}" required>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  <a href="/admin/categories" class="btn btn-link mb-3">Create new category</a>
+
+  {{else}}
+  <div class="form-group mb-3">
+    <label for="category">Category name</label>
+    <form action="/admin/categories" method="POST">
+      <input type="text" class="form-control mb-3" name="category" id="category" placeholder="Enter category" value=""
+        required>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  {{/if}}
+
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Category name</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each categories}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <th scope="row">{{this.name}}</th>
+      <td>
+        <button type="button" class="btn btn-link">
+          <a href="/admin/categories/{{this.id}}/edit">
+            Edit
+          </a>
+        </button>
+        <form action="/admin/categories/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-link">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

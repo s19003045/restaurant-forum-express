@@ -2,7 +2,7 @@ const db = require('../models')
 const Restaurant = db.Restaurant
 const User = db.User
 const Category = db.Category
-const fs = require('fs')
+// const fs = require('fs')
 
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -11,7 +11,7 @@ const adminController = {
   getRestaurants: (req, res) => {
     return Restaurant.findAll({ include: [Category] })
       .then(restaurants => {
-        console.log(restaurants)
+
         return res.render('admin/restaurants', { restaurants: restaurants, user: req.user, isAuthenticated: req.isAuthenticated })
       })
 
@@ -20,14 +20,14 @@ const adminController = {
 
     Restaurant.findOne({ include: [Category], where: { id: req.params.id } })
       .then(restaurant => {
-        console.log(restaurant)
+
         return res.render('admin/restaurant', { restaurant })
       })
   },
   createRestaurant: (req, res) => {
     return Category.findAll()
       .then(categories => {
-        console.log(categories[0])
+
         return res.render('admin/create', { categories })
       })
 
@@ -156,6 +156,65 @@ const adminController = {
         })
       })
   },
+  // category
+  getCategories: (req, res) => {
+    Category.findAll()
+      .then(categories => {
+        console.log(categories[0])
+        res.render('admin/categories', { categories })
+      })
+  },
+  postCategories: (req, res) => {
+    const { category } = req.body
+    if (category) {
+      Category.create({
+        name: category
+      })
+        .then(category => {
+          req.flash('success_messages', `create category "${category.name}" successifully`)
+          console.log(category)
+          res.redirect('/admin/categories')
+        })
+    } else {
+      req.flash('error_messages', "name didn't exist")
+      res.redirect('admin/categories')
+    }
+  },
+  editCategory: (req, res) => {
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        Category.findAll()
+          .then(categories => {
+            return res.render('admin/categories', { category, categories })
+          })
+      })
+  },
+  putCategory: (req, res) => {
+    console.log(req.params.id)
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        console.log(category)
+        category.update({
+          name: req.body.category
+        })
+          .then((category) => {
+            req.flash('success_messages', `update category "${category.name}" successifully`)
+            return res.redirect('/admin/categories')
+          })
+
+      })
+  },
+  deleteCategory: (req, res) => {
+    Category.findByPk(req.params.id)
+      .then(category => {
+        category.destroy()
+          .then(() => {
+            console.log(category.name)
+            req.flash('success_messages', `delete category "${category.name}" successifully`)
+            res.redirect('/admin/categories')
+          })
+      })
+  }
 }
 
 module.exports = adminController
