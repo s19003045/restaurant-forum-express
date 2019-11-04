@@ -17,7 +17,7 @@ const passport = require('./config/passport')
 const methodOverride = require('method-override')
 
 
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
+app.engine('handlebars', exphbs({ defaultLayout: 'main', helpers: require('./config/handlebars-helper.js') }))
 app.set('view engine', 'handlebars')
 
 app.use(bodyParser.urlencoded({ extended: true }))

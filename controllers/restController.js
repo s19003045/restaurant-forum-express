@@ -3,9 +3,9 @@ const Restaurant = db.Restaurant
 
 const restController = {
   getRestaurants: (req, res) => {
-    Restaurant.findAll()
+    Restaurant.findAll({ limit: 1 })
       .then(restaurants => {
-        console.log(restaurants)
+
         return res.render('restaurants', { restaurants })
       })
     // return res.render('restaurants')

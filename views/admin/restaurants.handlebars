@@ -1,18 +1,21 @@
 <h1>餐廳後台</h1>
-
 <div class="mb-3">
-  <a href='/admin/restaurants/create' class="btn btn-primary mr-3">
-    New Restaurant
+  <button href='/admin/restaurants/create' class="btn btn-warning mr-3">
+    <i class="fas fa-plus mr-1"></i>New Restaurant
+  </button>
+</div>
+<div class="mb-3">
+  <a href='/admin/restaurants' class="btn btn-link disabled">restaurants
   </a>
-  <a href='/admin/users' class="btn btn-primary">Users
+  <a href='/admin/users' class="btn btn-link">Users
   </a>
 </div>
-
 
 <table class="table">
   <thead class="thead-dark">
     <tr>
       <th scope="col">#</th>
+      <th scope="col">Category</th>
       <th scope="col">Name</th>
       <th scope="col">#</th>
     </tr>
@@ -21,6 +24,7 @@
     {{#each restaurants}}
     <tr>
       <th scope="row">{{this.id}}</th>
+      <th scope="row">{{this.Category.name}}</th>
       <td>{{this.name}}</td>
       <td>
         <button type="button" class="btn btn-link">
