@@ -48,8 +48,8 @@ module.exports = (app, passport) => {
 
   // category routes
   app.get('/admin/categories', authenticatedAdmin, adminController.getCategories)
-  app.post('/admin/categories', authenticatedAdmin, adminController.postCategories),
-  app.get('/admin/categories/:id/edit', authenticatedAdmin, adminController.editCategory),
+  app.post('/admin/categories', authenticatedAdmin, adminController.postCategories)
+  app.get('/admin/categories/:id/edit', authenticatedAdmin, adminController.getCategories)
   app.put('/admin/categories/:id', authenticatedAdmin, adminController.putCategory)
   app.delete('/admin/categories/:id', authenticatedAdmin, adminController.deleteCategory)
 

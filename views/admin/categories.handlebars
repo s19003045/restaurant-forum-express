@@ -3,33 +3,35 @@
 <div class="mb-3">
   <a href='/admin/restaurants' class="btn btn-link">restaurants
   </a>
+  <span>|</span>
   <a href='/admin/users' class="btn btn-link">Users
   </a>
+  <span>|</span>
   <a href='/admin/users' class="btn btn-link disabled">categories
   </a>
 </div>
-<div class="col-8">
+<div class="col-lg-6">
 
   {{#if category}}
-  <div class="form-group mb-3">
-    <label for="category">Edit category name</label>
-    <form action="/admin/categories/{{category.id}}?_method=PUT" method="POST">
-      <input type="text" class="form-control mb-3" name="category" id="category" placeholder="Enter category"
+  <form action="/admin/categories/{{category.id}}?_method=PUT" method="POST">
+    <div class="form-group row align-items-center p-3 my-3 bg-purple rounded shadow-sm">
+      <label for="category" class=" col-form-label">Edit category</label>
+      <input type="text" class="form-control mb-2" name="category" id="category" placeholder="Enter category"
         value="{{category.name}}" required>
       <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
-  <a href="/admin/categories" class="btn btn-link mb-3">Create new category</a>
+      <a href="/admin/categories" class="mt-3 btn btn-link mb-3 ml-4">or Create new category</a>
+    </div>
 
+  </form>
   {{else}}
-  <div class="form-group mb-3">
-    <label for="category">Category name</label>
-    <form action="/admin/categories" method="POST">
+  <form action="/admin/categories" method="POST">
+    <div class="form-group row align-items-center p-3 my-3 bg-purple rounded shadow-sm">
+      <label for="category" class=" col-form-label">Create new category</label>
       <input type="text" class="form-control mb-3" name="category" id="category" placeholder="Enter category" value=""
         required>
       <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
+    </div>
+  </form>
   {{/if}}
 
 </div>

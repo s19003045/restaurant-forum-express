@@ -158,10 +158,17 @@ const adminController = {
   },
   // category
   getCategories: (req, res) => {
-    Category.findAll()
+    return Category.findAll()
       .then(categories => {
         console.log(categories[0])
-        res.render('admin/categories', { categories })
+        if (req.params.id) {
+          return Category.findByPk(req.params.id)
+            .then(category => {
+              return res.render('admin/categories', { category, categories })
+            })
+        } else {
+          return res.render('admin/categories', { categories })
+        }
       })
   },
   postCategories: (req, res) => {
@@ -176,33 +183,28 @@ const adminController = {
           res.redirect('/admin/categories')
         })
     } else {
-      req.flash('error_messages', "name didn't exist")
+      req.flash('error_messages', "category name didn't exist")
       res.redirect('admin/categories')
     }
   },
-  editCategory: (req, res) => {
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        Category.findAll()
-          .then(categories => {
-            return res.render('admin/categories', { category, categories })
-          })
-      })
-  },
   putCategory: (req, res) => {
     console.log(req.params.id)
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        console.log(category)
-        category.update({
-          name: req.body.category
-        })
-          .then((category) => {
-            req.flash('success_messages', `update category "${category.name}" successifully`)
-            return res.redirect('/admin/categories')
+    if (!req.body.category) {
+      req.flash('error_messages', 'categirt name didn\'t exist')
+      return res.redirect('back')
+    } else {
+      return Category.findByPk(req.params.id)
+        .then(category => {
+          console.log(category)
+          category.update({
+            name: req.body.category
           })
-
-      })
+            .then((category) => {
+              req.flash('success_messages', `update category "${category.name}" successifully`)
+              return res.redirect('/admin/categories')
+            })
+        })
+    }
   },
   deleteCategory: (req, res) => {
     Category.findByPk(req.params.id)
