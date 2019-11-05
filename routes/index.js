@@ -20,12 +20,14 @@ module.exports = (app, passport) => {
     res.redirect('/signin')
   }
 
-  // restaurants route
+  // ===== restaurants route =====
   app.get('/', authenticated, (req, res) => { res.redirect('/restaurants') })
 
   app.get('/restaurants', authenticated, restController.getRestaurants)
 
-  // admin route
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+
+  // ===== admin route for restaurants =====
   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
 
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
@@ -42,18 +44,18 @@ module.exports = (app, passport) => {
 
   app.delete('/admin/restaurants/:id', adminController.deleteRestaurant)
 
-  // admin/users
+  // ===== admin route for user =====
   app.get('/admin/users', authenticatedAdmin, adminController.editUsers)
   app.put('/admin/users/:id', authenticatedAdmin, adminController.putUsers)
 
-  // category routes
+  // ===== admin routes for category =====
   app.get('/admin/categories', authenticatedAdmin, adminController.getCategories)
   app.post('/admin/categories', authenticatedAdmin, adminController.postCategories)
   app.get('/admin/categories/:id/edit', authenticatedAdmin, adminController.getCategories)
   app.put('/admin/categories/:id', authenticatedAdmin, adminController.putCategory)
   app.delete('/admin/categories/:id', authenticatedAdmin, adminController.deleteCategory)
 
-  // user route
+  // ==== user route ====
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
   app.get('/signin', userController.signInPage)
