@@ -28,3 +28,33 @@
 </div>
 <br />
 <br />
+
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="/restaurants?pageNumber={{prev}}&categoryId={{categoryId}}">Previous
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+
+    {{#each pageList}}
+    {{#ifCond ../pageNumber this}}
+    <li class="page-item active">
+      <a class="page-link" href="#">{{this}}</a>
+    </li>
+    {{else}}
+    <li class="page-item">
+      <a class="page-link" href="/restaurants?pageNumber={{this}}&categoryId={{../categoryId}}">{{this}}
+      </a>
+    </li>
+    {{/ifCond}}
+    {{/each}}
+
+    <li class="page-item">
+      <a class="page-link" href="/restaurants?pageNumber={{next}}&categoryId={{categoryId}}">Next
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>

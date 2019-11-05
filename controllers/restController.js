@@ -1,45 +1,39 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const limitPerPage = 10 //預設每頁筆數
 
 const restController = {
   getRestaurants: (req, res) => {
+
     let categoryId = ''
     let whereQuery = {}
     if (req.query.categoryId) {
       categoryId = Number(req.query.categoryId)
       whereQuery['categoryId'] = categoryId
     }
+    let pageNumber = Number(req.query.pageNumber) || 1 //預設顯示第一頁
 
     Category.findAll()
       .then(categories => {
-        Restaurant.findAll({ where: whereQuery, include: [Category] })
+        Restaurant.findAndCountAll({ where: whereQuery, include: [Category], limit: limitPerPage, offset: (pageNumber - 1) * limitPerPage })
           .then(restaurants => {
-
-            const data = restaurants.map(r => ({
+            // 總頁數 totalPage
+            let totalPage = Math.ceil(restaurants.count / limitPerPage)
+            // 頁數的陣列
+            const pageList = Array.from({ length: totalPage }, (value, index) => index + 1)
+            // 推算前一頁 prev
+            let prev = pageNumber == 1 ? 1 : pageNumber - 1
+            // 推算後一頁 nexgt
+            let next = pageNumber == totalPage ? totalPage : pageNumber + 1
+            // 限制 restaurant 的 description 字數
+            const data = restaurants.rows.map(r => ({
               ...r.dataValues,
-              description: r.dataValues.description.substring(0, 50) //重新定義 r.dataValues.description
+              description: r.dataValues.description.substring(0, 50)
             }))
-            return res.render('restaurants', { restaurants: data, categories: categories, categoryId: categoryId })
+            return res.render('restaurants', { restaurants: data, categories: categories, categoryId: categoryId, pageNumber: pageNumber, pageList: pageList, prev: prev, next: next })
           })
       })
-
-
-    // if (req.query.categoryId) {
-
-    // } else {
-    //   Category.findAll()
-    //     .then(categories => {
-    //       Restaurant.findAll({ include: [Category] })
-    //         .then(restaurants => {
-    //           const data = restaurants.map(r => ({
-    //             ...r.dataValues,
-    //             description: r.dataValues.description.substring(0, 50) //重新定義 r.dataValues.description
-    //           }))
-    //           return res.render('restaurants', { restaurants: data, categories: categories, categoryId: 0 })
-    //         })
-    //     })
-    // }
   },
   getRestaurant: (req, res) => {
     // console.log(req.params.id)
