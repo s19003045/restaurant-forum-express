@@ -141,16 +141,6 @@ const adminController = {
       })
   },
 
-  // ======== Comment ======
-  deleteComment: (req, res) => {
-    Comment.findByPk(1)
-      .then(comment => {
-        comment.destroy()
-          .then(() => {
-            return res.redirect(`/restaurants/1`)
-          })
-      })
-  },
 
   // ====== user =======
   editUsers: (req, res) => {
@@ -203,7 +193,7 @@ const adminController = {
   putCategory: (req, res) => {
     console.log(req.params.id)
     if (!req.body.category) {
-      req.flash('error_messages', 'categirt name didn\'t exist')
+      req.flash('error_messages', 'category name didn\'t exist')
       return res.redirect('back')
     } else {
       return Category.findByPk(req.params.id)

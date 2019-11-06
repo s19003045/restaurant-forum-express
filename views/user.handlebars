@@ -1,0 +1,35 @@
+<div class="row mt-5">
+  <div class="col col-md-4">
+    <div class="avatar">
+      {{!-- <img class="img-responsive center-block" src="{{user.image}}" style="width: 250px;margin-bottom: 25px;"> --}}
+      <img class="" src="http://lorempixel.com/640/480/" alt="" width="250">
+    </div>
+  </div>
+  <div class="col col-md-8">
+    <div class="well">
+      <ul class="list-unstyled">
+        <li class="my-2"><strong class="mr-3">Name:</strong>{{user.name}}</li>
+        <li class="my-2"><strong class="mr-3">Email:{{user.email}}</strong></li>
+        <li class="my-2"><strong class="mr-3"></strong></li>
+
+        {{#ifCond loginUserId user.id}}
+        <a href="/users/{{user.id}}/edit" class="mt-3 btn btn-info">Edit</a>
+        {{/ifCond}}
+
+      </ul>
+    </div>
+  </div>
+</div>
+<hr>
+<h5>已評論餐廳</h5>
+<div class="row mt-2">
+  <br>
+  {{#each restaurants}}
+  <div class="mr-2">
+    <a href="/restaurants/{{this.id}}">
+      <img src="{{this.image}}" width="100" alt="">
+    </a>
+
+  </div>
+  {{/each}}
+</div>

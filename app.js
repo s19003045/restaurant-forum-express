@@ -16,11 +16,11 @@ const flash = require('connect-flash')
 const passport = require('./config/passport')
 const methodOverride = require('method-override')
 
-
+app.use(bodyParser.urlencoded({ extended: true }))
 app.engine('handlebars', exphbs({ defaultLayout: 'main', helpers: require('./config/handlebars-helper.js') }))
 app.set('view engine', 'handlebars')
 
-app.use(bodyParser.urlencoded({ extended: true }))
+
 app.use(session({ secret: 'DennyJohnAbby', resave: false, saveUninitialized: false }))
 app.use(flash())
 
