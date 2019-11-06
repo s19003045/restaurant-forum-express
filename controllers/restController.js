@@ -1,6 +1,8 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const Comment = db.Comment
+const User = db.User
 const limitPerPage = 10 //預設每頁筆數
 
 const restController = {
@@ -37,15 +39,17 @@ const restController = {
   },
   getRestaurant: (req, res) => {
     // console.log(req.params.id)
-    if (!req.params.id) {
-      req.flash('error_messages', 'link error')
-      res.redirect('/restaurants')
-    } else {
-      Restaurant.findByPk(req.params.id, { include: Category })
-        .then(restaurant => {
-          res.render('restaurant', { restaurant })
-        })
-    }
+
+    Restaurant.findByPk(req.params.id, {
+      include: [
+        Category, { model: Comment, include: [User] }
+      ]
+    })
+      .then(restaurant => {
+        console.log(restaurant)
+
+        res.render('restaurant', { restaurant })
+      })
   }
 }
 
