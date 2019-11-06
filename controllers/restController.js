@@ -12,7 +12,7 @@ const restController = {
     let whereQuery = {}
     if (req.query.categoryId) {
       categoryId = Number(req.query.categoryId)
-      whereQuery['categoryId'] = categoryId
+      whereQuery['CategoryId'] = categoryId
     }
     let pageNumber = Number(req.query.pageNumber) || 1 //預設顯示第一頁
 
