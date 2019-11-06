@@ -3,11 +3,12 @@ const Restaurant = db.Restaurant
 const User = db.User
 const Category = db.Category
 // const fs = require('fs')
-
+const Comment = db.Comment
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const adminController = {
+  // ======= restaurants ======
   getRestaurants: (req, res) => {
     return Restaurant.findAll({ include: [Category] })
       .then(restaurants => {
@@ -139,6 +140,19 @@ const adminController = {
         res.redirect('/admin/restaurants')
       })
   },
+
+  // ======== Comment ======
+  deleteComment: (req, res) => {
+    Comment.findByPk(1)
+      .then(comment => {
+        comment.destroy()
+          .then(() => {
+            return res.redirect(`/restaurants/1`)
+          })
+      })
+  },
+
+  // ====== user =======
   editUsers: (req, res) => {
     User.findAll()
       .then(users => {

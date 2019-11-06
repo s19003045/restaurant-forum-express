@@ -30,6 +30,8 @@ module.exports = (app, passport) => {
 
   app.post('/comments', commentController.postComment)
 
+  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
+
   // ===== admin route for restaurants =====
   app.get('/admin', authenticatedAdmin, (req, res) => { res.redirect('/admin/restaurants') })
 
