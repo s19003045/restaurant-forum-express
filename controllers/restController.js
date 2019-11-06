@@ -50,6 +50,16 @@ const restController = {
 
         res.render('restaurant', { restaurant })
       })
+  },
+  getFeeds: (req, res) => {
+    Restaurant.findAll({ order: [['createdAt', 'DESC']], limit: 10, include: [Category] })
+      .then(restaurants => {
+        Comment.findAll({ order: [['createdAt', 'DESC']], limit: 10, include: [User, Restaurant] })
+          .then(comments => {
+            return res.render('feeds', { restaurants, comments })
+          })
+      })
+
   }
 }
 
