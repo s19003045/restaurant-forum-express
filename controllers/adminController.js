@@ -100,6 +100,7 @@ const adminController = {
       imgur.setClientID(IMGUR_CLIENT_ID);
       // 讀取暫存在 file.path 的 file，並上傳至 imgur API
       imgur.upload(file.path, (err, img) => {
+        console.log(img)
         return Restaurant.findByPk(req.params.id)
           .then((restaurant) => {
             restaurant.update({

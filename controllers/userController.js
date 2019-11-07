@@ -74,6 +74,7 @@ const userController = {
 
 
   putUser: (req, res) => {
+    console.log('IMGUR_CLIENT_ID:', IMGUR_CLIENT_ID)
     console.log('name:', req.body.name)
     if (Number(req.params.id) !== Number(req.user.id)) {
       req.flash('error_messages', 'permission denied')
@@ -82,15 +83,17 @@ const userController = {
     const { file } = req
     console.log('file:', file)
     if (file) {
+      console.log('file path:', file.path)
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         if (err) { console.log(err) } else {
           console.log('img:', img)
+          console.log('image link:', img.data.link)
           return User.findByPk(req.params.id)
             .then((user) => {
               user.update({
                 name: req.body.name,
-                image: img.data.link
+                image: file ? img.data.link : user.image,
               }).then((user) => {
                 req.flash('success_messages', 'profile was successfully update')
                 return res.redirect(`/users/${user.id}`)
@@ -105,6 +108,7 @@ const userController = {
           user.update({
             name: req.body.name
           }).then((user) => {
+
             console.log('user(updated):', user)
             req.flash('success_messages', 'profile was successfully update')
             return res.redirect(`/users/${user.id}`)
