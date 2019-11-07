@@ -46,9 +46,11 @@ const restController = {
       ]
     })
       .then(restaurant => {
-        console.log(restaurant)
-
-        res.render('restaurant', { restaurant })
+        restaurant.update({ viewCounts: (restaurant.viewCounts + 1) })
+          .then(restaurant => {
+            console.log(restaurant)
+            res.render('restaurant', { restaurant })
+          })
       })
   },
   getFeeds: (req, res) => {
@@ -64,11 +66,12 @@ const restController = {
   getDashboard: (req, res) => {
     Restaurant.findByPk(req.params.id, { include: [Comment, Category] })
       .then(restaurant => {
+
         console.log(restaurant)
         let commentCount = restaurant.Comments.length
         return res.render('restDashboard', { commentCount, restaurant })
-      })
 
+      })
   }
 }
 
