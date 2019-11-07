@@ -29,9 +29,11 @@ const restController = {
             // 推算後一頁 nexgt
             let next = pageNumber == totalPage ? totalPage : pageNumber + 1
             // 限制 restaurant 的 description 字數
+
             const data = restaurants.rows.map(r => ({
               ...r.dataValues,
-              description: r.dataValues.description.substring(0, 50)
+              description: r.dataValues.description.substring(0, 50),
+              isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
             }))
             return res.render('restaurants', { restaurants: data, categories: categories, categoryId: categoryId, pageNumber: pageNumber, pageList: pageList, prev: prev, next: next })
           })
@@ -42,14 +44,15 @@ const restController = {
 
     Restaurant.findByPk(req.params.id, {
       include: [
-        Category, { model: Comment, include: [User] }
+        Category, { model: Comment, include: [User] }, { model: User, as: 'FavoritedUsers' }
       ]
     })
       .then(restaurant => {
+        const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+
         restaurant.update({ viewCounts: (restaurant.viewCounts + 1) })
           .then(restaurant => {
-            console.log(restaurant)
-            res.render('restaurant', { restaurant })
+            res.render('restaurant', { restaurant, isFavorited })
           })
       })
   },
@@ -67,7 +70,6 @@ const restController = {
     Restaurant.findByPk(req.params.id, { include: [Comment, Category] })
       .then(restaurant => {
 
-        console.log(restaurant)
         let commentCount = restaurant.Comments.length
         return res.render('restDashboard', { commentCount, restaurant })
 
