@@ -19,13 +19,27 @@
   <div class="col-md-8">
     <p>{{restaurant.description}}</p>
     <a href="/restaurants/{{restaurant.id}}/dashboard" class="btn btn-primary mb-2 mr-2">Dashboard</a>
-    {{#if isFavorited}}
-    <form action="/favorite/{{restaurant.id}}?_method=DELETE" method="POST"><button type="submit"
-        class="btn btn-danger mb-2 mr-2">移除最愛</button></form>
-    {{else}}
-    <form action="/favorite/{{restaurant.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button>
-    </form>
-    {{/if}}
+    <div class="d-flex">
+      {{#if isFavorited}}
+      <form action="/favorite/{{restaurant.id}}?_method=DELETE" method="POST"><button type="submit"
+          class="btn btn-danger mb-2 mr-2 mb-2 mr-2">移除最愛</button></form>
+      {{else}}
+      <form action="/favorite/{{restaurant.id}}" method="POST"><button type="submit"
+          class="btn btn-primary mb-2 mr-2">加到最愛</button>
+      </form>
+      {{/if}}
+
+      {{#if isLiked}}
+      <form action="/like/{{restaurant.id}}?_method=DELETE" method="POST"><button type="submit"
+          class="btn btn-danger mb-2 mr-2">dislike</button>
+      </form>
+      {{else}}
+      <form action="/like/{{restaurant.id}}" method="POST"><button type="submit"
+          class="btn btn-primary mb-2 mr-2">Like</button>
+      </form>
+      {{/if}}
+    </div>
+
   </div>
   <hr>
 </div>
@@ -34,6 +48,8 @@
 
 <h3>所有評論：</h3>
 <br>
+
+
 {{#each restaurant.Comments}}
 {{#if ../user.isAdmin}}
 <form action="/comments/{{this.id}}?_method=DELETE" method="POST" style="float: right;">
@@ -47,6 +63,7 @@
 </blockquote>
 {{/each}}
 <hr>
+
 
 <form action="/comments?restaurantId={{restaurant.id}}" method="POST" class="mt-1">
   <div class="form-group">
