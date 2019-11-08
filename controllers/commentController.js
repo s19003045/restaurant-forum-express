@@ -7,14 +7,14 @@ const faker = require('faker')
 
 const commentController = {
   postComment: (req, res) => {
-    console.log(req.user)
+
     Comment.create({
       text: req.body.text,
       UserId: req.user.id,
       RestaurantId: req.query.restaurantId
     })
       .then(comment => {
-        console.log(comment)
+
         return res.redirect(`/restaurants/${req.query.restaurantId}`)
       })
   },

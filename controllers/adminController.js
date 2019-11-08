@@ -44,7 +44,7 @@ const adminController = {
       imgur.setClientID(IMGUR_CLIENT_ID);
       // 讀取暫存在 file.path 的 file，並上傳至 imgur API 
       imgur.upload(file.path, (err, img) => {
-        console.log('img data link:', img.data.link)
+
         return Restaurant.create({
           name: name,
           tel: tel,
@@ -78,12 +78,12 @@ const adminController = {
 
   },
   editRestaurant: (req, res) => {
-    console.log('editpage:', req.params.id)
+
     Category.findAll()
       .then(categories => {
         Restaurant.findByPk(req.params.id)
           .then(restaurant => {
-            console.log('restaurant name:', restaurant.name)
+
             return res.render('admin/create', { restaurant, categories })
           })
       })
@@ -100,7 +100,7 @@ const adminController = {
       imgur.setClientID(IMGUR_CLIENT_ID);
       // 讀取暫存在 file.path 的 file，並上傳至 imgur API
       imgur.upload(file.path, (err, img) => {
-        console.log(img)
+
         return Restaurant.findByPk(req.params.id)
           .then((restaurant) => {
             restaurant.update({
@@ -164,7 +164,7 @@ const adminController = {
   getCategories: (req, res) => {
     return Category.findAll()
       .then(categories => {
-        console.log(categories[0])
+
         if (req.params.id) {
           return Category.findByPk(req.params.id)
             .then(category => {
@@ -183,7 +183,7 @@ const adminController = {
       })
         .then(category => {
           req.flash('success_messages', `create category "${category.name}" successifully`)
-          console.log(category)
+
           res.redirect('/admin/categories')
         })
     } else {
@@ -192,14 +192,14 @@ const adminController = {
     }
   },
   putCategory: (req, res) => {
-    console.log(req.params.id)
+
     if (!req.body.category) {
       req.flash('error_messages', 'category name didn\'t exist')
       return res.redirect('back')
     } else {
       return Category.findByPk(req.params.id)
         .then(category => {
-          console.log(category)
+
           category.update({
             name: req.body.category
           })
@@ -215,7 +215,7 @@ const adminController = {
       .then(category => {
         category.destroy()
           .then(() => {
-            console.log(category.name)
+
             req.flash('success_messages', `delete category "${category.name}" successifully`)
             res.redirect('/admin/categories')
           })

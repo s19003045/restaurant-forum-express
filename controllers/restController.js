@@ -49,11 +49,10 @@ const restController = {
       ]
     })
       .then(restaurant => {
-        console.log('restaurant:', restaurant)
+
         const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
 
         const isLiked = restaurant.LikedUsers.map(r => r.id).includes(req.user.id)
-        console.log('isLiked:', isLiked)
 
         restaurant.update({ viewCounts: (restaurant.viewCounts + 1) })
           .then(restaurant => {

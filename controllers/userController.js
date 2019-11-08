@@ -32,7 +32,7 @@ const userController = {
               password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null)
             })
               .then(user => {
-                console.log(user)
+
                 req.flash('success_messages', '你已成功註冊帳號')
                 return res.redirect('/signin')
               })
@@ -128,7 +128,7 @@ const userController = {
   removeFavorite: (req, res) => {
     return Favorite.findOne({ where: { RestaurantId: req.params.restaurantId, UserId: req.user.id } })
       .then(favorite => {
-        console.log(favorite)
+
         favorite.destroy()
           .then(favorite => {
             return res.redirect('back')
@@ -136,7 +136,6 @@ const userController = {
       })
   },
   addLike: (req, res) => {
-    console.log('restaurant id:', req.params.restaurantId)
 
     Like.create({
       UserId: req.user.id,
@@ -148,7 +147,7 @@ const userController = {
 
   },
   removeLike: (req, res) => {
-    console.log('restaurant id:', req.params.restaurantId)
+
     Like.findOne({ where: { RestaurantId: req.params.restaurantId, UserId: req.user.id } })
       .then(restaurant => {
         restaurant.destroy()
@@ -160,8 +159,8 @@ const userController = {
 
   addFollowing: (req, res) => {
     return Followship.create({
-      followerId: req.user.id,
-      followingId: req.params.userId
+      FollowerId: req.user.id,
+      FollowingId: req.params.userId
     })
       .then((followship) => {
         return res.redirect('back')
@@ -171,8 +170,8 @@ const userController = {
   removeFollowing: (req, res) => {
     return Followship.findOne({
       where: {
-        followerId: req.user.id,
-        followingId: req.params.userId
+        FollowerId: req.user.id,
+        FollowingId: req.params.userId
       }
     })
       .then((followship) => {

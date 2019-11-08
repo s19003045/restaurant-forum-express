@@ -23,14 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     // 這個使用者有追蹤哪些人
     User.belongsToMany(User, {
       through: models.Followship,
-      foreignKey: 'followerId',
+      foreignKey: 'FollowerId',
       as: 'Followings'
     })
 
     // 這個使用者有哪些追蹤者
     User.belongsToMany(User, {
       through: models.Followship,
-      foreignKey: 'followingId',
+      foreignKey: 'FollowingId',
       as: 'Followers'
     })
   };
