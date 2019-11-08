@@ -76,11 +76,11 @@ module.exports = (app, passport) => {
 
   app.get('/users/top', authenticated, userController.getTopUser)
 
-  app.get('/users/:id', authenticated, userController.getUser)
+  app.get('/users/:id', authenticated, userController.getUserProfile)
 
-  app.get('/users/:id/edit', authenticated, userController.editUser)
+  app.get('/users/:id/edit', authenticated, userController.editUserProfile)
 
-  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+  app.put('/users/:id', authenticated, upload.single('image'), userController.putUserProfile)
 
 
   // favorite
@@ -94,4 +94,5 @@ module.exports = (app, passport) => {
   // following
   app.post('/following/:userId', authenticated, userController.addFollowing)
   app.delete('/following/:userId', authenticated, userController.removeFollowing)
+
 }

@@ -41,7 +41,6 @@ const restController = {
       })
   },
   getRestaurant: (req, res) => {
-    // console.log(req.params.id)
 
     Restaurant.findByPk(req.params.id, {
       include: [
@@ -82,7 +81,7 @@ const restController = {
   getTopRestaurant: (req, res) => {
     Restaurant.findAll({ include: [{ model: User, as: 'FavoritedUsers' }] })
       .then(restaurants => {
-        // console.log(restaurants)
+
         restaurants = restaurants.map(rest => ({
           ...rest.dataValues,
           FavoritedUsersCount: rest.FavoritedUsers.length,
@@ -93,7 +92,7 @@ const restController = {
         restaurants = restaurants.sort((a, b) => { return b.FavoritedUsersCount - a.FavoritedUsersCount })
 
         const topRestaurants = restaurants.slice(0, 10)
-        // console.log('長度：', restaurants.length)
+
         return res.render('topRestaurant', { restaurants: topRestaurants })
       })
   },

@@ -55,16 +55,16 @@ const userController = {
   },
 
   // get user profile
-  getUser: (req, res) => {
-    User.findByPk(req.params.id, { include: { model: Comment, include: [Restaurant] } })
-      .then(user => {
+  getUserProfile: (req, res) => {
+    User.findByPk(req.params.id, { include: [{ model: Comment, include: [Restaurant] }, { model: db.Restaurant, as: 'FavoritedRestaurants' }, { model: db.Restaurant, as: 'LikedRestaurants' }, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] }).then(user => {
 
-        const data = user.Comments.map(r => (r.Restaurant.dataValues))
-        // console.log('Restaurant:', data)
-        return res.render('user', { user, loginUserId: req.user.id, restaurants: data }) //user 瀏灠頁面的 user，loginUserId 為登入者的 id
-      })
+      const restCommented = user.Comments.map(r => (r.Restaurant.dataValues))
+
+      return res.render('userProfile', { user, loginUserId: req.user.id, restaurants: restCommented, Followers: user.Followers, Followings: user.Followings, FavoritedRestaurants: user.FavoritedRestaurants, LikedRestaurants: user.LikedRestaurants })
+    })
+
   },
-  editUser: (req, res) => {
+  editUserProfile: (req, res) => {
 
     if (req.user.id !== Number(req.params.id)) {
       return res.redirect('/')
@@ -72,19 +72,17 @@ const userController = {
       User.findByPk(req.params.id)
         .then(user => {
 
-          return res.render('editUser', { user }) //user 瀏灠頁面的 user，loginUserId 為登入者的 id
+          return res.render('editUserProfile', { user }) //user 瀏灠頁面的 user，loginUserId 為登入者的 id
         })
     }
   },
 
-
-  putUser: (req, res) => {
+  putUserProfile: (req, res) => {
 
     if (Number(req.params.id) !== Number(req.user.id)) {
       req.flash('error_messages', 'permission denied')
       return res.redirect('/')
     }
-
     const { file } = req
 
     if (file) {
@@ -186,7 +184,7 @@ const userController = {
     // 先撈出所有使用者，並其 followers
     User.findAll({ include: [{ model: User, as: 'Followers' }] })
       .then(users => {
-        // console.log(users)
+
         // 整理 users 資料
         users = users.map(user => ({
           ...user.dataValues,
@@ -199,6 +197,17 @@ const userController = {
         users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
 
         return res.render('topUser', { users })
+      })
+  },
+
+
+
+
+  getUserAll: (req, res) => {
+    User.findAll({ include: [{ all: true }] })
+      .then(users => {
+        console.log(users[0].Comments[0])
+        res.send('hihihihihi')
       })
   }
 }
