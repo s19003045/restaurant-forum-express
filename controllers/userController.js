@@ -5,6 +5,9 @@ const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
 const Like = db.Like
+const Followship = db.Followship
+
+
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -153,6 +156,53 @@ const userController = {
             return res.redirect('back')
           })
       })
+  },
+
+  addFollowing: (req, res) => {
+    return Followship.create({
+      followerId: req.user.id,
+      followingId: req.params.userId
+    })
+      .then((followship) => {
+        return res.redirect('back')
+      })
+  },
+
+  removeFollowing: (req, res) => {
+    return Followship.findOne({
+      where: {
+        followerId: req.user.id,
+        followingId: req.params.userId
+      }
+    })
+      .then((followship) => {
+        followship.destroy()
+          .then((followship) => {
+            return res.redirect('back')
+          })
+      })
+  },
+
+  getTopUser: (req, res) => {
+    // 先撈出所有使用者，並其 followers
+    User.findAll({ include: [{ model: User, as: 'Followers' }] })
+      .then(users => {
+        // console.log(users)
+        // 整理 users 資料
+        users = users.map(user => ({
+          ...user.dataValues,
+          // 計算追蹤者人數
+          FollowerCount: user.Followers.length,
+          // 該 user 是否被使用者追蹤者
+          isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+        }))
+        // 依追蹤者人數排序清單
+        users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
+
+        return res.render('topUser', { users })
+      })
   }
 }
+
+
 module.exports = userController

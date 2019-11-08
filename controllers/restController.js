@@ -79,7 +79,10 @@ const restController = {
         return res.render('restDashboard', { commentCount, restaurant })
 
       })
-  }
+  },
+  getTopRestaurant: (req, res) => {
+    res.send('get top restaurant')
+  },
 }
 
 module.exports = restController

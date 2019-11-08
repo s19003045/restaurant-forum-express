@@ -26,7 +26,13 @@ module.exports = (app, passport) => {
 
   app.get('/restaurants', authenticated, restController.getRestaurants)
   app.get('/restaurants/feeds', authenticated, restController.getFeeds)
+
+  app.get('/restaurants/top', authenticated, restController.getTopRestaurant)
+
   app.get('/restaurants/:id', authenticated, restController.getRestaurant)
+
+
+
   app.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 
   app.post('/comments', commentController.postComment)
@@ -68,8 +74,10 @@ module.exports = (app, passport) => {
   app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
   app.get('/logout', userController.logout)
 
+  app.get('/users/top', authenticated, userController.getTopUser)
 
   app.get('/users/:id', authenticated, userController.getUser)
+
   app.get('/users/:id/edit', authenticated, userController.editUser)
 
   app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
@@ -82,4 +90,8 @@ module.exports = (app, passport) => {
   // like
   app.post('/like/:restaurantId', authenticated, userController.addLike)
   app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
+  // following
+  app.post('/following/:userId', authenticated, userController.addFollowing)
+  app.delete('/following/:userId', authenticated, userController.removeFollowing)
 }
