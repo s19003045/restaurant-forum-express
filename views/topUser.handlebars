@@ -14,26 +14,33 @@
 </ul>
 
 <br>
-
+<br>
 <h1>美食達人</h1>
-<hr />
-<div class="row" style="text-align: center;">
+
+<div class="row my-5">
   {{#each users}}
-  <div class="col-md-3 mb-4">
-    <a href="/users/{{this.id}}">
-      <img class="" src="{{this.image}}" width="140px" height="140px">
-    </a>
-    <h2>{{this.name}}</h2>
-    <span class="badge badge-secondary">追蹤人數：{{this.FollowerCount}}</span>
-    <p>
-      {{#if this.isFollowed }}
-      <form action="/following/{{this.id}}?_method=DELETE" method="POST" style="display: contents;"><button
-          type="submit" class="btn btn-danger">取消追蹤</button></form>
-      {{else}}
-      <form action="/following/{{this.id}}" method="POST" style="display: contents;"><button type="submit"
-          class="btn btn-primary">追蹤</button></form>
-      {{/if}}
-    </p>
+  <div class="col-lg-4 col-md-6 mb-3">
+    <div class="card h-100">
+      <a href="/users/{{this.id}}"><img class="card-img-top" src="{{this.image}}" alt=""></a>
+      <div class="card-body">
+        <h4 class="card-title">
+          <a href="/users/{{this.id}}">{{this.name}}</a>
+        </h4>
+        <h5><span class="badge badge-secondary">追蹤人數：{{this.FollowerCount}}</span></h5>
+        {{#if this.isFollowed }}
+        <form action="/following/{{this.id}}?_method=DELETE" method="POST" style="display: contents;"><button
+            type="submit" class="btn btn-danger">取消追蹤</button></form>
+        {{else}}
+        <form action="/following/{{this.id}}" method="POST" style="display: contents;"><button type="submit"
+            class="btn btn-primary">追蹤</button></form>
+        {{/if}}
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+      </div>
+    </div>
   </div>
   {{/each}}
 </div>
+
+<a href="javascript:history.back()">回上一頁</a>

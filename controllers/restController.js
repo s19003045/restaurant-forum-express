@@ -80,7 +80,22 @@ const restController = {
       })
   },
   getTopRestaurant: (req, res) => {
-    res.send('get top restaurant')
+    Restaurant.findAll({ include: [{ model: User, as: 'FavoritedUsers' }] })
+      .then(restaurants => {
+        // console.log(restaurants)
+        restaurants = restaurants.map(rest => ({
+          ...rest.dataValues,
+          FavoritedUsersCount: rest.FavoritedUsers.length,
+          isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(rest.id)
+        }))
+
+
+        restaurants = restaurants.sort((a, b) => { return b.FavoritedUsersCount - a.FavoritedUsersCount })
+
+        const topRestaurants = restaurants.slice(0, 10)
+        // console.log('長度：', restaurants.length)
+        return res.render('topRestaurant', { restaurants: topRestaurants })
+      })
   },
 }
 
