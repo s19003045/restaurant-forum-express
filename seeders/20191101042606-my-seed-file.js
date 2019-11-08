@@ -48,7 +48,7 @@ module.exports = {
       updatedAt: new Date()
     })), {})
     return queryInterface.bulkInsert('Comments',
-      Array.from({ length: 200 }).map(d =>
+      Array.from({ length: 30 }).map(d =>
         ({
           text: faker.lorem.text().substring(0, 50),
           UserId: Math.floor(Math.random() * 3) + 1,
