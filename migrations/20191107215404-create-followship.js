@@ -9,10 +9,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       FollowingId: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       FollowerId: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
