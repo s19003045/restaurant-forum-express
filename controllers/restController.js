@@ -48,16 +48,23 @@ const restController = {
       ]
     })
       .then(restaurant => {
+        return restaurant.increment('viewCounts', { by: 1 })
+      })
+      .then(restaurant => {
 
         const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
 
         const isLiked = restaurant.LikedUsers.map(r => r.id).includes(req.user.id)
-
-        restaurant.update({ viewCounts: (restaurant.viewCounts + 1) })
-          .then(restaurant => {
-            res.render('restaurant', { restaurant, isFavorited, isLiked })
-          })
+        res.render('restaurant', { restaurant, isFavorited, isLiked })
       })
+
+
+    // restaurant.update({ viewCounts: (restaurant.viewCounts + 1) })
+    //   .then(restaurant => {
+
+    //     res.render('restaurant', { restaurant, isFavorited, isLiked })
+    //   })
+
   },
   getFeeds: (req, res) => {
     Restaurant.findAll({ order: [['createdAt', 'DESC']], limit: 10, include: [Category] })

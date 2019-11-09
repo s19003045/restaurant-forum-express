@@ -84,13 +84,15 @@ const userController = {
       return res.redirect('/')
     }
     const { file } = req
-
+    console.log(file)
+    console.log(IMGUR_CLIENT_ID)
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
         if (err) { console.log(err) } else {
           return User.findByPk(req.params.id)
             .then((user) => {
+              console.log('image:', img.data)
               user.update({
                 name: req.body.name,
                 image: file ? img.data.link : user.image,

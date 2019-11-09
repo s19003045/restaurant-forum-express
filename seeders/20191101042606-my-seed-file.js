@@ -22,7 +22,14 @@ module.exports = {
       email: 'user2@example.com',
       password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
       isAdmin: false,
-      name: 'user2',
+      name: 'John',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }, {
+      email: 'user3@example.com',
+      password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
+      isAdmin: false,
+      name: 'Jenny',
       createdAt: new Date(),
       updatedAt: new Date()
     }], {})
@@ -35,7 +42,7 @@ module.exports = {
           opening_hours: '08:00',
           image: faker.image.imageUrl(),
           description: faker.lorem.text().substring(0, 200),
-          CategoryId: Math.floor(Math.random() * 5) + 1,
+          CategoryId: Math.floor(Math.random() * 7) + 1,
           viewCounts: Math.floor(Math.random() * 1000),
           createdAt: new Date(),
           updatedAt: new Date()
