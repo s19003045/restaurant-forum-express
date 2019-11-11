@@ -42,34 +42,5 @@
 </div>
 {{/each}}
 
-<div class="mt-4 row justify-content-center">
-  <div class="col col-3">
-    {{#each restaurants}}
-    <div class="card mb-3 d-flex" style="width: 18rem;">
-      <img src="{{this.image}}" class="card-img-top img-fluid" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">{{this.name}}</h5>
-
-        <span class="badge badge-secondary">收藏數：{{this.FavoritedUsersCount}}</span>
-
-        <p class="card-text mt-2">{{this.description}}
-        </p>
-        <a href="/restaurants/{{this.id}}" class="btn btn-primary my-2">Show</a>
-
-        <div class="d-flex">
-          {{#if this.isFavorited}}
-          <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
-              class="btn btn-danger mb-2 mr-2">移除最愛</button></form>
-          {{else}}
-          <form action="/favorite/{{this.id}}" method="POST"><button type="submit"
-              class="btn btn-primary mb-2 mr-2">加到最愛</button>
-          </form>
-          {{/if}}
-        </div>
-      </div>
-    </div>
-    {{/each}}
-  </div>
-</div>
 
 <a href="javascript:history.back()">回上一頁</a>

@@ -10,15 +10,24 @@ const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const adminController = {
   // ======= restaurants ======
   getRestaurants: (req, res) => {
-    return Restaurant.findAll({ include: [Category] })
+    return Restaurant.findAll({
+      include: [Category]
+    })
       .then(restaurants => {
-        return res.render('admin/restaurants', { restaurants: restaurants, user: req.user, isAuthenticated: req.isAuthenticated })
+        return res.render('admin/restaurants', {
+          restaurants: restaurants,
+          user: req.user,
+          isAuthenticated: req.isAuthenticated
+        })
       })
 
   },
   getRestaurant: (req, res) => {
 
-    Restaurant.findOne({ include: [Category], where: { id: req.params.id } })
+    Restaurant.findOne({
+      include: [Category],
+      where: { id: req.params.id }
+    })
       .then(restaurant => {
 
         return res.render('admin/restaurant', { restaurant })
@@ -136,7 +145,9 @@ const adminController = {
     }
   },
   deleteRestaurant: (req, res) => {
-    Restaurant.destroy({ where: { id: req.params.id } })
+    Restaurant.destroy({
+      where: { id: req.params.id }
+    })
       .then(() => {
         res.redirect('/admin/restaurants')
       })

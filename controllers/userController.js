@@ -20,7 +20,11 @@ const userController = {
       req.flash('error_messages', '密碼錯誤')
       return res.redirect('/signup')
     } else {
-      User.findOne({ where: { email: req.body.email } })
+      User.findOne({
+        where: {
+          email: req.body.email
+        }
+      })
         .then(user => {
           if (user) {
             req.flash('error_messages', '已有人註冊此帳號')
@@ -56,13 +60,35 @@ const userController = {
 
   // get user profile
   getUserProfile: (req, res) => {
-    User.findByPk(req.params.id, { include: [{ model: Comment, include: [Restaurant] }, { model: db.Restaurant, as: 'FavoritedRestaurants' }, { model: db.Restaurant, as: 'LikedRestaurants' }, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] }).then(user => {
+    User.findByPk(
+      req.params.id,
+      {
+        include: [
+          { model: Comment, include: [Restaurant] },
+          { model: db.Restaurant, as: 'FavoritedRestaurants' },
+          { model: db.Restaurant, as: 'LikedRestaurants' },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' }
+        ]
+      }
+    )
+      .then(user => {
 
-      const restCommented = user.Comments.map(r => (r.Restaurant.dataValues))
+        user.CommentsRestaurants = []
+        user.Comments.map((d) => {
+          if (!user.CommentsRestaurants.map(d => d.id).includes(d.RestaurantId)) {
+            user.CommentsRestaurants.push(d.Restaurant)
+            return d
+          }
+        })
 
-      return res.render('userProfile', { user, loginUserId: req.user.id, restaurants: restCommented, Followers: user.Followers, Followings: user.Followings, FavoritedRestaurants: user.FavoritedRestaurants, LikedRestaurants: user.LikedRestaurants })
-    })
-
+        return res.render('userProfile',
+          {
+            userProfile: user,
+            loginUserId: req.user.id
+          }
+        )
+      })
   },
   editUserProfile: (req, res) => {
 
@@ -88,6 +114,7 @@ const userController = {
     console.log(IMGUR_CLIENT_ID)
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
+
       imgur.upload(file.path, (err, img) => {
         if (err) { console.log(err) } else {
           return User.findByPk(req.params.id)
@@ -96,10 +123,11 @@ const userController = {
               user.update({
                 name: req.body.name,
                 image: file ? img.data.link : user.image,
-              }).then((user) => {
-                req.flash('success_messages', 'profile was successfully update')
-                return res.redirect(`/users/${user.id}`)
               })
+                .then((user) => {
+                  req.flash('success_messages', 'profile was successfully update')
+                  return res.redirect(`/users/${user.id}`)
+                })
             })
         }
       })
@@ -108,10 +136,11 @@ const userController = {
         .then((user) => {
           user.update({
             name: req.body.name
-          }).then((user) => {
-            req.flash('success_messages', 'profile was successfully update')
-            return res.redirect(`/users/${user.id}`)
           })
+            .then((user) => {
+              req.flash('success_messages', 'profile was successfully update')
+              return res.redirect(`/users/${user.id}`)
+            })
         })
     }
   },
@@ -126,7 +155,9 @@ const userController = {
       })
   },
   removeFavorite: (req, res) => {
-    return Favorite.findOne({ where: { RestaurantId: req.params.restaurantId, UserId: req.user.id } })
+    return Favorite.findOne({
+      where: { RestaurantId: req.params.restaurantId, UserId: req.user.id }
+    })
       .then(favorite => {
 
         favorite.destroy()
@@ -148,7 +179,11 @@ const userController = {
   },
   removeLike: (req, res) => {
 
-    Like.findOne({ where: { RestaurantId: req.params.restaurantId, UserId: req.user.id } })
+    Like.findOne({
+      where: {
+        RestaurantId: req.params.restaurantId, UserId: req.user.id
+      }
+    })
       .then(restaurant => {
         restaurant.destroy()
           .then(restaurant => {
@@ -184,7 +219,9 @@ const userController = {
 
   getTopUser: (req, res) => {
     // 先撈出所有使用者，並其 followers
-    User.findAll({ include: [{ model: User, as: 'Followers' }] })
+    User.findAll({
+      include: [{ model: User, as: 'Followers' }]
+    })
       .then(users => {
 
         // 整理 users 資料
@@ -202,16 +239,6 @@ const userController = {
       })
   },
 
-
-
-
-  getUserAll: (req, res) => {
-    User.findAll({ include: [{ all: true }] })
-      .then(users => {
-        console.log(users[0].Comments[0])
-        res.send('hihihihihi')
-      })
-  }
 }
 
 

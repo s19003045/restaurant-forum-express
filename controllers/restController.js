@@ -18,7 +18,12 @@ const restController = {
 
     Category.findAll()
       .then(categories => {
-        Restaurant.findAndCountAll({ where: whereQuery, include: [Category], limit: limitPerPage, offset: (pageNumber - 1) * limitPerPage })
+        Restaurant.findAndCountAll({
+          where: whereQuery,
+          include: [Category],
+          limit: limitPerPage,
+          offset: (pageNumber - 1) * limitPerPage
+        })
           .then(restaurants => {
             // 總頁數 totalPage
             let totalPage = Math.ceil(restaurants.count / limitPerPage)
@@ -36,7 +41,11 @@ const restController = {
               isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
               isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
             }))
-            return res.render('restaurants', { restaurants: data, categories: categories, categoryId: categoryId, pageNumber: pageNumber, pageList: pageList, prev: prev, next: next })
+            return res.render('restaurants', {
+              restaurants: data,
+              categories: categories, categoryId: categoryId, pageNumber: pageNumber, pageList: pageList,
+              prev: prev, next: next
+            })
           })
       })
   },
@@ -44,7 +53,9 @@ const restController = {
 
     Restaurant.findByPk(req.params.id, {
       include: [
-        Category, { model: Comment, include: [User] }, { model: User, as: 'FavoritedUsers' }, { model: User, as: 'LikedUsers' }
+        Category,
+        { model: Comment, include: [User] },
+        { model: User, as: 'FavoritedUsers' }, { model: User, as: 'LikedUsers' }
       ]
     })
       .then(restaurant => {
@@ -55,29 +66,41 @@ const restController = {
         const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
 
         const isLiked = restaurant.LikedUsers.map(r => r.id).includes(req.user.id)
-        res.render('restaurant', { restaurant, isFavorited, isLiked })
+        res.render('restaurant', {
+          restaurant,
+          isFavorited,
+          isLiked
+        })
       })
 
 
-    // restaurant.update({ viewCounts: (restaurant.viewCounts + 1) })
-    //   .then(restaurant => {
-
-    //     res.render('restaurant', { restaurant, isFavorited, isLiked })
-    //   })
-
   },
   getFeeds: (req, res) => {
-    Restaurant.findAll({ order: [['createdAt', 'DESC']], limit: 10, include: [Category] })
+    Restaurant.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: 10,
+      include: [Category]
+    })
       .then(restaurants => {
-        Comment.findAll({ order: [['createdAt', 'DESC']], limit: 10, include: [User, Restaurant] })
+        Comment.findAll({
+          order: [['createdAt', 'DESC']], limit: 10,
+          include: [User, Restaurant]
+        })
           .then(comments => {
-            return res.render('feeds', { restaurants, comments })
+            return res.render('feeds', {
+              restaurants,
+              comments
+            })
           })
       })
 
   },
   getDashboard: (req, res) => {
-    Restaurant.findByPk(req.params.id, { include: [Comment, Category] })
+    Restaurant.findByPk(req.params.id,
+      {
+        include: [Comment, Category]
+      }
+    )
       .then(restaurant => {
 
         let commentCount = restaurant.Comments.length
@@ -86,7 +109,12 @@ const restController = {
       })
   },
   getTopRestaurant: (req, res) => {
-    Restaurant.findAll({ include: [{ model: User, as: 'FavoritedUsers' }] })
+    Restaurant.findAll({
+      include: [{
+        model: User,
+        as: 'FavoritedUsers'
+      }]
+    })
       .then(restaurants => {
 
         restaurants = restaurants.map(rest => ({
@@ -94,7 +122,6 @@ const restController = {
           FavoritedUsersCount: rest.FavoritedUsers.length,
           isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(rest.id)
         }))
-
 
         restaurants = restaurants.sort((a, b) => { return b.FavoritedUsersCount - a.FavoritedUsersCount })
 

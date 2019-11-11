@@ -44,6 +44,7 @@ module.exports = (app, passport) => {
 
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
 
+
   app.post('/admin/restaurants', authenticatedAdmin, upload.single('image'), adminController.postRestaurant) //新增餐廳資料，只接受單一圖檔
 
   app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
