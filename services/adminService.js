@@ -30,6 +30,15 @@ const adminService = {
 
       })
   },
+
+  deleteRestaurant: (req, res, callback) => {
+    return Restaurant.destroy({
+      where: { id: req.params.id }
+    })
+      .then(() => {
+        callback({ status: 'success', message: '' })
+      })
+  },
 }
 
 module.exports = adminService
