@@ -46,4 +46,4 @@ app.listen(port, () => {
   console.log(`Express server listen on port:${port}`)
 })
 
-require('./routes')(app, passport)
+require('./routes')(app)
