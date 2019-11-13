@@ -18,8 +18,24 @@ const adminController = {
     })
 
   },
+
+  postRestaurant: (req, res) => {
+    adminService.postRestaurant(req, res, (data) => {
+      if (data['status'] === 'error') {
+        return res.json(data)
+      }
+      return res.json(data)
+    })
+  },
+
   getRestaurant: (req, res) => {
     return adminService.getRestaurant(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+
+  deleteRestaurant: (req, res) => {
+    return adminService.deleteRestaurant(req, res, (data) => {
       return res.json(data)
     })
   },
@@ -31,11 +47,6 @@ const adminController = {
     })
   },
 
-  deleteRestaurant: (req, res) => {
-    return adminService.deleteRestaurant(req, res, (data) => {
-      return res.json(data)
-    })
-  },
 }
 
 module.exports = adminController

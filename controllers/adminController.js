@@ -20,9 +20,25 @@ const adminController = {
     })
   },
 
-  getRestaurant: (req, res) => {
-    return adminService.getRestaurant(req, res, (data) => {
-      return res.render('admin/restaurant', data)
+  editRestaurant: (req, res) => {
+    Category.findAll()
+      .then(categories => {
+        Restaurant.findByPk(req.params.id)
+          .then(restaurant => {
+
+            return res.render('admin/create', { restaurant, categories })
+          })
+      })
+  },
+
+  postRestaurant: (req, res) => {
+    adminService.postRestaurant(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data['message'])
+      res.redirect('/admin/restaurants')
     })
   },
 
@@ -34,62 +50,13 @@ const adminController = {
       })
 
   },
-  postRestaurant: (req, res) => {
-    const { name, tel, address, opening_hours, description, categoryId } = req.body
-    if (!name) {
-      req.flash('error_messages', "name didn't exist")
-      return res.redirect('back')
-    }
-    const { file } = req // equal to const file = req.file
 
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID);
-      // 讀取暫存在 file.path 的 file，並上傳至 imgur API 
-      imgur.upload(file.path, (err, img) => {
-
-        return Restaurant.create({
-          name: name,
-          tel: tel,
-          address: address,
-          opening_hours: opening_hours,
-          description: description,
-          image: file ? img.data.link : null,
-          CategoryId: categoryId
-        }).then((restaurant) => {
-
-          req.flash('success_messages', 'restaurant was successfully created')
-          return res.redirect('/admin/restaurants')
-        })
-      })
-    } else {
-      return Restaurant.create({
-        name: name,
-        tel: tel,
-        address: address,
-        opening_hours: opening_hours,
-        description: description,
-        image: null,
-        CategoryId: categoryId
-      })
-        .then(restaurant => {
-          req.flash('success_messages', 'restaurant was successfully created')
-
-          res.redirect('/admin/restaurants')
-        })
-    }
-
+  getRestaurant: (req, res) => {
+    return adminService.getRestaurant(req, res, (data) => {
+      return res.render('admin/restaurant', data)
+    })
   },
-  editRestaurant: (req, res) => {
 
-    Category.findAll()
-      .then(categories => {
-        Restaurant.findByPk(req.params.id)
-          .then(restaurant => {
-
-            return res.render('admin/create', { restaurant, categories })
-          })
-      })
-  },
   putRestaurant: (req, res) => {
     const { name, tel, address, opening_hours, description, categoryId } = req.body
     if (!req.body.name) {
@@ -137,6 +104,7 @@ const adminController = {
         })
     }
   },
+
   deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, (data) => {
       if (data['status'] === 'success') {
