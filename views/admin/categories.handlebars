@@ -16,7 +16,7 @@
   <form action="/admin/categories/{{category.id}}?_method=PUT" method="POST">
     <div class="form-group row align-items-center p-3 my-3 bg-purple rounded shadow-sm">
       <label for="category" class=" col-form-label">Edit category</label>
-      <input type="text" class="form-control mb-2" name="category" id="category" placeholder="Enter category"
+      <input type="text" class="form-control mb-2" name="name" id="category" placeholder="Enter category"
         value="{{category.name}}" required>
       <button type="submit" class="btn btn-primary">Submit</button>
       <a href="/admin/categories" class="mt-3 btn btn-link mb-3 ml-4">or Create new category</a>
@@ -27,7 +27,7 @@
   <form action="/admin/categories" method="POST">
     <div class="form-group row align-items-center p-3 my-3 bg-purple rounded shadow-sm">
       <label for="category" class=" col-form-label">Create new category</label>
-      <input type="text" class="form-control mb-3" name="category" id="category" placeholder="Enter category" value=""
+      <input type="text" class="form-control mb-3" name="name" id="category" placeholder="Enter category" value=""
         required>
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>

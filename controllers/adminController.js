@@ -6,16 +6,13 @@ const Category = db.Category
 const Comment = db.Comment
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
-
 const adminService = require('../services/adminService')
-
 
 
 const adminController = {
   // ======= restaurants ======
   getRestaurants: (req, res) => {
-    return adminService.getRestaurants(req, res, (data) => {
-      console.log(data)
+    adminService.getRestaurants(req, res, (data) => {
       return res.render('admin/restaurants', data)
     })
   },
@@ -45,70 +42,31 @@ const adminController = {
   createRestaurant: (req, res) => {
     return Category.findAll()
       .then(categories => {
-
         return res.render('admin/create', { categories })
       })
-
   },
 
   getRestaurant: (req, res) => {
-    return adminService.getRestaurant(req, res, (data) => {
+    adminService.getRestaurant(req, res, (data) => {
       return res.render('admin/restaurant', data)
     })
   },
 
   putRestaurant: (req, res) => {
-    const { name, tel, address, opening_hours, description, categoryId } = req.body
-    if (!req.body.name) {
-      req.flash('error_messages', "name didn't exist")
-      return res.redirect('back')
-    }
-
-    const { file } = req
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID);
-      // 讀取暫存在 file.path 的 file，並上傳至 imgur API
-      imgur.upload(file.path, (err, img) => {
-
-        return Restaurant.findByPk(req.params.id)
-          .then((restaurant) => {
-            restaurant.update({
-              name: name,
-              tel: tel,
-              address: address,
-              opening_hours: opening_hours,
-              description: description,
-              image: file ? img.data.link : restaurant.image,
-              CategoryId: categoryId
-            }).then((restaurant) => {
-              req.flash('success_messages', 'restaurant was successfully to update')
-              res.redirect('/admin/restaurants')
-            })
-          })
-      })
-    } else {
-      return Restaurant.findByPk(req.params.id)
-        .then((restaurant) => {
-          restaurant.update({
-            name: name,
-            tel: tel,
-            address: address,
-            opening_hours: opening_hours,
-            description: description,
-            image: restaurant.image,
-            CategoryId: categoryId
-          }).then((restaurant) => {
-            req.flash('success_messages', 'restaurant was successfully to update')
-            res.redirect('/admin/restaurants')
-          })
-        })
-    }
+    adminService.putRestaurant(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data['message'])
+      res.redirect('/admin/restaurants')
+    })
   },
 
   deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, (data) => {
       if (data['status'] === 'success') {
-        return res.redirect('/amin/restaurants')
+        return res.redirect('/admin/restaurants')
       }
     })
   },
@@ -131,67 +89,7 @@ const adminController = {
         })
       })
   },
-  // category
-  getCategories: (req, res) => {
-    return Category.findAll()
-      .then(categories => {
 
-        if (req.params.id) {
-          return Category.findByPk(req.params.id)
-            .then(category => {
-              return res.render('admin/categories', { category, categories })
-            })
-        } else {
-          return res.render('admin/categories', { categories })
-        }
-      })
-  },
-  postCategories: (req, res) => {
-    const { category } = req.body
-    if (category) {
-      Category.create({
-        name: category
-      })
-        .then(category => {
-          req.flash('success_messages', `create category "${category.name}" successifully`)
-
-          res.redirect('/admin/categories')
-        })
-    } else {
-      req.flash('error_messages', "category name didn't exist")
-      res.redirect('admin/categories')
-    }
-  },
-  putCategory: (req, res) => {
-
-    if (!req.body.category) {
-      req.flash('error_messages', 'category name didn\'t exist')
-      return res.redirect('back')
-    } else {
-      return Category.findByPk(req.params.id)
-        .then(category => {
-
-          category.update({
-            name: req.body.category
-          })
-            .then((category) => {
-              req.flash('success_messages', `update category "${category.name}" successifully`)
-              return res.redirect('/admin/categories')
-            })
-        })
-    }
-  },
-  deleteCategory: (req, res) => {
-    Category.findByPk(req.params.id)
-      .then(category => {
-        category.destroy()
-          .then(() => {
-
-            req.flash('success_messages', `delete category "${category.name}" successifully`)
-            res.redirect('/admin/categories')
-          })
-      })
-  }
 }
 
 module.exports = adminController

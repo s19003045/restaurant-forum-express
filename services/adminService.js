@@ -14,6 +14,7 @@ const adminService = {
       })
 
   },
+
   getRestaurant: (req, res, callback) => {
     return Restaurant.findOne({
       include: [Category],
@@ -24,28 +25,30 @@ const adminService = {
       })
   },
 
-  getCategories: (req, res, callback) => {
-    return Category.findAll()
-      .then(categories => {
-        return callback({ categories })
-
-      })
-  },
-
   deleteRestaurant: (req, res, callback) => {
     return Restaurant.destroy({
       where: { id: req.params.id }
     })
       .then(() => {
-        callback({ status: 'success', message: '' })
+        callback({
+          status: 'success',
+          message: ''
+        })
       })
   },
 
   postRestaurant: (req, res, callback) => {
-    const { name, tel, address, opening_hours, description, categoryId } = req.body
+    const { name,
+      tel, address,
+      opening_hours,
+      description,
+      categoryId
+    } = req.body
+
     if (!name) {
       return callback({
-        status: 'error', message: "name didn't exist"
+        status: 'error',
+        message: "name didn't exist"
       })
 
     }
@@ -65,7 +68,10 @@ const adminService = {
           image: file ? img.data.link : null,
           CategoryId: categoryId
         }).then((restaurant) => {
-          return callback({ status: 'success', message: "restaurant was successfully created" })
+          return callback({
+            status: 'success',
+            message: "restaurant was successfully created"
+          })
         })
       })
     } else {
@@ -79,10 +85,72 @@ const adminService = {
         CategoryId: categoryId
       })
         .then(restaurant => {
-          return callback({ status: 'success', message: "restaurant was successfully created" })
+          return callback({
+            status: 'success',
+            message: "restaurant was successfully created"
+          })
         })
     }
+  },
 
+  putRestaurant: (req, res, callback) => {
+    const { name,
+      tel, address,
+      opening_hours,
+      description,
+      categoryId
+    } = req.body
+
+    if (!req.body.name) {
+      return callback({
+        status: 'error',
+        message: "name didn't exist"
+      })
+    }
+
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID);
+      // 讀取暫存在 file.path 的 file，並上傳至 imgur API
+      imgur.upload(file.path, (err, img) => {
+
+        return Restaurant.findByPk(req.params.id)
+          .then((restaurant) => {
+            restaurant.update({
+              name: name,
+              tel: tel,
+              address: address,
+              opening_hours: opening_hours,
+              description: description,
+              image: file ? img.data.link : restaurant.image,
+              CategoryId: categoryId
+            }).then((restaurant) => {
+              return callback({
+                status: 'success',
+                message: "restaurant was successfully to update"
+              })
+            })
+          })
+      })
+    } else {
+      return Restaurant.findByPk(req.params.id)
+        .then((restaurant) => {
+          restaurant.update({
+            name: name,
+            tel: tel,
+            address: address,
+            opening_hours: opening_hours,
+            description: description,
+            image: restaurant.image,
+            CategoryId: categoryId
+          }).then((restaurant) => {
+            return callback({
+              status: 'success',
+              message: "restaurant was successfully to update"
+            })
+          })
+        })
+    }
   },
 }
 
