@@ -5,16 +5,19 @@ const bcrpyt = require('bcrypt-nodejs')
 const db = require('../models')
 const User = db.User
 
-passport.use(new LocalStrategy({
-  usernameField: 'email',
-  passwordField: 'password',
-  passReqToCallback: true
-},
+passport.use(new LocalStrategy(
+  {
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
   (req, username, password, cb) => {
     User.findOne({ where: { email: username } })
       .then(user => {
         if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼錯誤'))
+
         if (!bcrpyt.compareSync(password, user.password)) return cb(null, false, req.flash('error_messages', '帳號或密碼錯誤'))
+
         return cb(null, user)
       })
   }
@@ -26,10 +29,17 @@ passport.serializeUser((user, cb) => {
 })
 
 passport.deserializeUser((id, cb) => {
-  User.findByPk(id, { include: [{ model: db.Restaurant, as: 'FavoritedRestaurants' }, { model: db.Restaurant, as: 'LikedRestaurants' }, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] }).then(user => {
-
-    return cb(null, user)
+  User.findByPk(id, {
+    include: [
+      { model: db.Restaurant, as: 'FavoritedRestaurants' },
+      { model: db.Restaurant, as: 'LikedRestaurants' },
+      { model: User, as: 'Followers' },
+      { model: User, as: 'Followings' }
+    ]
   })
+    .then(user => {
+      return cb(null, user)
+    })
 })
 
 
@@ -52,10 +62,11 @@ let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
       { model: User, as: 'Followers' },
       { model: User, as: 'Followings' }
     ]
-  }).then(user => {
-    if (!user) return next(null, false)
-    return next(null, user)
   })
+    .then(user => {
+      if (!user) return next(null, false)
+      return next(null, user)
+    })
 })
 passport.use(strategy)
 

@@ -38,7 +38,11 @@ const userController = {
         }
 
         //簽發 token
-        var payload = { id: user.id }
+        var payload = {
+          id: user.id,
+          exp: Math.floor(Date.now() / 1000) + (60 * 60),
+        } //Signing a token with 1 hour of expiration:
+
         var token = jwt.sign(payload, process.env.JWT_SECRET)
 
         return res.json({
