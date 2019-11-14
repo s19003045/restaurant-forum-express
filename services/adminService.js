@@ -108,11 +108,13 @@ const adminService = {
       })
     }
 
+
     const { file } = req
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID);
       // 讀取暫存在 file.path 的 file，並上傳至 imgur API
       imgur.upload(file.path, (err, img) => {
+        console.log('link:', img.data.link)
 
         return Restaurant.findByPk(req.params.id)
           .then((restaurant) => {

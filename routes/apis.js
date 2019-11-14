@@ -33,7 +33,7 @@ router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminCon
 
 router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.deleteRestaurant)
 
-router.post('/admin/restaurants', upload.single('image'), authenticated, authenticatedAdmin, adminController.postRestaurant) //新增餐廳資料，只接受單一圖檔
+router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.single('image'), adminController.postRestaurant) //新增餐廳資料，只接受單一圖檔
 
 router.put('/admin/restaurants/:id', upload.single('image'), authenticated, authenticatedAdmin, adminController.putRestaurant) //編輯餐廳資料，只接受單一圖檔
 
