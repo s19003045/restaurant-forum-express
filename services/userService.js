@@ -4,10 +4,10 @@ const User = db.User
 const Restaurant = db.Restaurant
 const Category = db.Category
 const Comment = db.Comment
-const Favorite = db.Favorite
 const Like = db.Like
 const Followship = db.Followship
-
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 // JWT
 const jwt = require('jsonwebtoken')
