@@ -8,93 +8,69 @@ const passportJWT = require('passport-jwt')
 const ExtractJwt = passportJWT.ExtractJwt
 const JwtStrategy = passportJWT.Strategy
 
+const userService = require('../../services/userService')
+
 const userController = {
   singIn: (req, res) => {
-    // 檢查 email 及 password
-    if (!req.body.email || !req.body.password) {
-      return res.json({
-        status: 'error',
-        message: "required fields didn't exist"
-      })
-    }
-
-    // 檢查 user 是否存在與密碼正確性
-    let username = req.body.email
-    let password = req.body.password
-
-    User.findOne({ name: username })
-      .then(user => {
-        if (!user) {
-          return res.status(401).json({
-            status: 'error',
-            message: "no such user found"
-          })
-        }
-        if (!bcrypt.compareSync(password, user.password)) {
-          return res.status(401).json({
-            status: 'error',
-            message: "passwords did not match"
-          })
-        }
-
-        //簽發 token
-        var payload = {
-          id: user.id,
-          exp: Math.floor(Date.now() / 1000) + (60 * 60),
-        } //Signing a token with 1 hour of expiration:
-
-        var token = jwt.sign(payload, process.env.JWT_SECRET)
-
-        return res.json({
-          status: 'success',
-          message: 'ok',
-          token: token,
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            isAdmin: user.isAdmin
-          }
-        })
-      })
+    userService.singIn(req, res, (data) => {
+      return res.json(data)
+    })
   },
+
   signUp: (req, res) => {
-    if (!req.body.passwordCheck || !req.body.password || !req.body.email) {
-      return res.json({
-        status: 'error',
-        message: '必填欄位不得為空'
-      })
-    }
-    if (req.body.passwordCheck !== req.body.password) {
-      return res.json({
-        status: 'error',
-        message: '兩次密碼輸入不同！'
-      })
-    } else {
-      User.findOne({ where: { email: req.body.email } })
-        .then(user => {
-          if (user) {
-            return res.json({
-              status: 'error',
-              message: '信箱重覆！'
-            })
-          } else {
-            User.create({
-              name: req.body.name,
-              email: req.body.email,
-              password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10), null)
-            })
-              .then(user => {
-                return res.json({
-                  status: 'success',
-                  message: '成功註冊帳號！'
-                })
-              })
-          }
-        })
-    }
-  }
+    userService.signUp(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+  getUserProfile: (req, res) => {
+    userService.getUserProfile(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+  putUserProfile: (req, res, callback) => {
+
+    userService.putUserProfile(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+  addFavorite: (req, res) => {
+    userService.addFavorite(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+  removeFavorite: (req, res) => {
+    userService.removeFavorite(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+  addLike: (req, res) => {
+    userService.addLike(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+  removeLike: (req, res) => {
+    userService.removeLike(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+
+  addFollowing: (req, res) => {
+    userService.addFollowing(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+
+  removeFollowing: (req, res) => {
+    userService.removeFollowing(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+
+  getTopUser: (req, res) => {
+    userService.getTopUser(req, res, (data) => {
+      return res.json(data)
+    })
+  },
 
 }
-
 module.exports = userController
